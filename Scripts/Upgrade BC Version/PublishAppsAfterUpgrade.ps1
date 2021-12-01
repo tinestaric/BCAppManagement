@@ -6,8 +6,8 @@ $installationMedia = $settings.MicrosoftAppPath
 $BeTernaAppPath = $settings.BeTernaAppPath
 $customAppPath = $settings.outputFolder
 
-$devLicence = $settings.devLicence
-$clientLicence = $settings.clientLicence
+$devLicence = Get-ChildItem $settings.devLicencePath -Filter '.flf'
+$clientLicence = Get-ChildItem $settings.clientLicencePath -Filter '.flf'
 
 Import-Module $settings.NavAdminToolPath
 
