@@ -9,6 +9,5 @@ Import-Module $settings.NavAdminToolPath
 Invoke-NAVApplicationDatabaseConversion -DatabaseServer $DatabaseServer -DatabaseName $DatabaseName
 
 Set-NAVServerConfiguration -ServerInstance $ServerInstance -KeyName DatabaseName -KeyValue $DatabaseName
-Set-NAVServerConfiguration -ServerInstance $ServerInstance -KeyName 
 
 Restart-NAVServerInstance -ServerInstance $ServerInstance
