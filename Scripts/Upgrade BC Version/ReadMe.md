@@ -21,4 +21,11 @@
 ## 6. Run the "Upgrade Control Add-Ins.ps1"
 
 ## 7. Check if NTLM Authentication and API Services are enabled in the BC Administration Tool
+ - Check all AAD settings, and reset them. 
+
+## 8. Set IIS Instance Settings
+ - Stop the IIS instance
+ - Override files in wwwroot folder with files in WebPublish folder. WebPublish is in the install directory. This is only necessary for non-default instances, as default instance is updated during the installation of new BC version
+ - Set correct ports and authentication method in navsettings.json which is in the instance folder in wwwroot
+ - for AAD set AadApplicationId and AadAuthorityUri, this is mandatory for default instance as well 
 ## 8. Enjoy!
