@@ -1,6 +1,7 @@
 # Steps for Upgrading BC
 ## 1. Run the "Prepare Datebase.ps1":
  - Backs up the database
+ - Backs up the Server Instance Configuration
  - Uninstalls and unpublished all current Apps
  - Stops the Service
 
@@ -22,6 +23,7 @@
 
 ## 7. Check if NTLM Authentication and API Services are enabled in the BC Administration Tool
  - Check all AAD settings, and reset them. 
+ - Compare Server Instance Configuration Backup from step 1 to the current configuration to find all missing parts.
 
 ## 8. Set IIS Instance Settings
  - Stop the IIS instance
