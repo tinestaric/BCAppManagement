@@ -25,7 +25,8 @@
 
 ## 8. Set IIS Instance Settings
  - Stop the IIS instance
+ - Backup navsettings.json file from the wwwroot\instance folder
  - Override files in wwwroot folder with files in WebPublish folder. WebPublish is in the install directory. This is only necessary for non-default instances, as default instance is updated during the installation of new BC version
- - Set correct ports and authentication method in navsettings.json which is in the instance folder in wwwroot
+ - resotre navserver.json file
  - for AAD set AadApplicationId and AadAuthorityUri, this is mandatory for default instance as well 
 ## 8. Enjoy!
