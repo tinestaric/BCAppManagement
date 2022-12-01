@@ -3,6 +3,7 @@ Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { 
 $serverInstance = $settings.serverInstance
 
 $installationMedia = $settings.MicrosoftAppPath
+$BCVersion = $settings.BCVersion
 $BeTernaAppPath = $settings.BeTernaAppPath
 $archivePath = $settings.BeTernaArchive
 $customAppPath = $settings.outputFolder
@@ -19,7 +20,7 @@ Import-NAVServerLicense $serverInstance -LicenseData ([Byte[]]$(Get-Content -Pat
 Restart-NAVserverInstance $serverInstance
 
 Write-Host "Publishing System Symbols"
-Publish-NAVApp -serverInstance $serverInstance -Path "$installationMedia\ModernDev\program files\Microsoft Dynamics NAV\190\AL Development Environment\System.app" -PackageType SymbolsOnly
+Publish-NAVApp -serverInstance $serverInstance -Path "$installationMedia\ModernDev\program files\Microsoft Dynamics NAV\$BCVersion\AL Development Environment\System.app" -PackageType SymbolsOnly
 
 Write-Host "Installing System App"
 Publish-NAVApp -serverInstance $serverInstance -Path "$installationMedia\Applications\system application\Source\Microsoft_System Application.app"
@@ -47,23 +48,34 @@ foreach($app in $appsArray)
 
     Write-Host "Installing $app"
         
-    Publish-NAVApp -serverInstance $serverInstance -Path $appFile.FullName
+    Publish-NAVApp -serverInstance $serverInstance -Path $appFile.FullName -SkipVerification
+    Sync-NAVApp -serverInstance $serverInstance -Name $app
+    Start-NAVAppDataUpgrade -serverInstance $serverInstance -Name $app
+    Move-Item -Path $appFile.FullName -Destination $archivePath
+}
+
+foreach($appFile in Get-ChildItem $BeTernaAppPath -Filter "*Language*.app")
+{
+    $app = $appFile.Name.Split('_')[1]
+    Write-Host "Installing Translations $app"
+
+    Publish-NAVApp -serverInstance $serverInstance -Path $appFile.FullName -SkipVerification
     Sync-NAVApp -serverInstance $serverInstance -Name $app
     Start-NAVAppDataUpgrade -serverInstance $serverInstance -Name $app
     Move-Item -Path $appFile.FullName -Destination $archivePath
 }
 
 Write-Host "Installing Custom Apps"
-$customApp = Get-ChildItem -Path "$customAppPath\" -Filter "*.app"
-$appFileName = ($customApp -split '\\')[-1]
-$appName = ($appFileName -split '_')[1]
+foreach($app in Get-ChildItem -Path "$customAppPath\" -Filter "*.app")
+{ 
+    $appName = ($app -split '_')[1]
 
-Write-Host "Installing: $appName"
-Publish-NAVApp -serverInstance $serverInstance -Path $customApp.FullName -SkipVerification
-Sync-NAVApp -serverInstance $serverInstance -Name $appName
-Start-NAVAppDataUpgrade -serverInstance $serverInstance -Name $appName
-Move-Item -Path $customApp.FullName -Destination $archivePath
-
+    Write-Host "Installing: $appName"
+    Publish-NAVApp -serverInstance $serverInstance -Path $app.FullName -SkipVerification
+    Sync-NAVApp -serverInstance $serverInstance -Name $appName
+    Start-NAVAppDataUpgrade -serverInstance $serverInstance -Name $appName
+    Move-Item -Path $app.FullName -Destination $archivePath
+}
 
 Import-NAVServerLicense $serverInstance -LicenseData ([Byte[]]$(Get-Content -Path $clientLicence.FullName -Encoding Byte))
 Restart-NAVserverInstance $serverInstance

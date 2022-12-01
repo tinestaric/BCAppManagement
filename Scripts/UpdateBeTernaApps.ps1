@@ -26,7 +26,7 @@ foreach ($app in $apps) {
 [array]::Reverse($appNames)
 
 
-"Uninstall and Unpublish all ld Be-terna Apps"
+"Uninstall and Unpublish all Old Be-terna Apps"
 foreach ($app in $appNames)
 {
     "Uninstalling: $app"

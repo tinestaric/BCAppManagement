@@ -2,6 +2,6 @@ Get-Content ".\Settings.ini" | foreach-object -begin {$settings=@{}} -process { 
 
 Import-Module $settings.NavAdminToolPath
 
-$licence = Get-ChildItem -Path $settings.devLicence -Filter '*.bclicense'
+$licence = Get-ChildItem -Path $settings.devLicence -Filter '*.flf'
 Import-NAVServerLicense $settings.serverInstance -LicenseData ([Byte[]]$(Get-Content -Path $licence.FullName -Encoding Byte))
 Restart-NAVServerInstance -ServerInstance $settings.serverInstance
